@@ -61,6 +61,8 @@ English | [简体中文](/README_zh-CN.md)
     <img src="https://user-images.githubusercontent.com/25839884/219026120-ba71e48b-6e94-4bd4-b4e9-b7d175b5e362.png" width="3%" alt="" /></a>
 </div>
 
+### (Spencer) Forked this repo and modified it to accept the UNIONS data we're working with (which has 5 channels and is stored in hdf5 files)
+
 ## Introduction
 
 MMPreTrain is an open source pre-training toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
