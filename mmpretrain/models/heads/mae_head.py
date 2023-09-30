@@ -19,10 +19,12 @@ class MAEPretrainHead(BaseModule):
     def __init__(self,
                  loss: dict,
                  norm_pix: bool = False,
+                 in_chans: int = 3,
                  patch_size: int = 16) -> None:
         super().__init__()
         self.norm_pix = norm_pix
         self.patch_size = patch_size
+        self.in_chans = in_chans
         self.loss_module = MODELS.build(loss)
 
     def patchify(self, imgs: torch.Tensor) -> torch.Tensor:
@@ -30,7 +32,7 @@ class MAEPretrainHead(BaseModule):
 
         Args:
             imgs (torch.Tensor): A batch of images. The shape should
-                be :math:`(B, 3, H, W)`.
+                be :math:`(B, in_chans, H, W)`.
 
         Returns:
             torch.Tensor: Patchified images. The shape is
@@ -40,9 +42,9 @@ class MAEPretrainHead(BaseModule):
         assert imgs.shape[2] == imgs.shape[3] and imgs.shape[2] % p == 0
 
         h = w = imgs.shape[2] // p
-        x = imgs.reshape(shape=(imgs.shape[0], 3, h, p, w, p))
+        x = imgs.reshape(shape=(imgs.shape[0], self.in_chans, h, p, w, p))
         x = torch.einsum('nchpwq->nhwpqc', x)
-        x = x.reshape(shape=(imgs.shape[0], h * w, p**2 * 3))
+        x = x.reshape(shape=(imgs.shape[0], h * w, p ** 2 * self.in_chans))
         return x
 
     def unpatchify(self, x: torch.Tensor) -> torch.Tensor:
@@ -56,12 +58,12 @@ class MAEPretrainHead(BaseModule):
             torch.Tensor: The shape is :math:`(B, 3, H, W)`.
         """
         p = self.patch_size
-        h = w = int(x.shape[1]**.5)
+        h = w = int(x.shape[1] ** .5)
         assert h * w == x.shape[1]
 
-        x = x.reshape(shape=(x.shape[0], h, w, p, p, 3))
+        x = x.reshape(shape=(x.shape[0], h, w, p, p, self.in_chans))
         x = torch.einsum('nhwpqc->nchpwq', x)
-        imgs = x.reshape(shape=(x.shape[0], 3, h * p, h * p))
+        imgs = x.reshape(shape=(x.shape[0], self.in_chans, h * p, h * p))
         return imgs
 
     def construct_target(self, target: torch.Tensor) -> torch.Tensor:
