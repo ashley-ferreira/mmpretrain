@@ -63,6 +63,20 @@ English | [简体中文](/README_zh-CN.md)
 
 ### (Spencer) Forked this repo and modified it to accept the UNIONS data we're working with (which has 5 channels and is stored in hdf5 files)
 
+### (Ashley) Forked this repo from Spencer's to track some non-permanent changes she has been making for better loss curve and testing capability
+Usually, you run this code using the train and test codes in `mmpretrain/tools/` but I couldn't get this working with my path stuff so instead to run this code I use
+```
+python train.py mmpretrain/configs/mae/mae_vit_base_p16_unions.py
+python test.py mmpretrain/configs/mae/mae_vit_base_p16_unions_test.py /arc/projects/unions/ssl/results/training_runs/MAEViT_Oct16_5/epoch_1.pth
+```
+from just within `mmpretrain`. 
+
+The next steps to implement are: 
+1. Get learning working better. Investigate hyperparameter space as well as data pipeline and transforms.
+2. Add testing and validation capabilities. This mainly means finding or defining the loss metric. I have started this but it must already exist for training to work and I need to hunt that part down.
+3. Visualize results.
+4. Fix current band-aid solutions.
+
 ## Introduction
 
 MMPreTrain is an open source pre-training toolbox based on PyTorch. It is a part of the [OpenMMLab](https://openmmlab.com/) project.
