@@ -19,7 +19,7 @@ optim_wrapper = dict(
     #loss_scale='dynamic',
     optimizer=dict(
         type=AdamW,
-        lr=1.5e-4 * 4096 / 256,
+        lr=1.5e-5 * 32 / 256, 
         betas=(0.9, 0.95),
         weight_decay=0.05),
     paramwise_cfg=dict(
@@ -32,25 +32,25 @@ optim_wrapper = dict(
         }))
 
 # learning rate scheduler
-param_scheduler = [
+param_scheduler = [ # base lr is increasing when I thought it should be decreasing, this may cause that
     dict(
         type=LinearLR,
         start_factor=0.0001,
         by_epoch=True,
         begin=0,
-        end=40,
+        end=20,
         convert_to_iter_based=True),
     dict(
         type=CosineAnnealingLR,
         T_max=360,
         by_epoch=True,
-        begin=40,
+        begin=20,
         end=400,
         convert_to_iter_based=True)
 ]
 
 # runtime settings
-train_cfg = dict(type=EpochBasedTrainLoop, max_epochs=400)
+train_cfg = dict(type=EpochBasedTrainLoop, max_epochs=100)
 # only keeps the latest 3 checkpoints
 default_hooks.checkpoint = dict(
     type=CheckpointHook, interval=1, max_keep_ckpts=3)
@@ -60,8 +60,8 @@ randomness.update(seed=0, diff_rank_seed=True)
 # auto resume
 resume = True
 
-work_dir = '/arc/projects/unions/ssl/results/training_runs/MAEViT'
+work_dir = '/arc/projects/unions/ssl/results/training_runs/MAEViT_Oct16_8'
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR
 # based on the actual training batch size.
-auto_scale_lr = dict(base_batch_size=4096)
+auto_scale_lr = dict(base_batch_size=32)

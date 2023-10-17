@@ -125,6 +125,10 @@ class BaseSelfSupervisor(BaseModel, metaclass=ABCMeta):
             return feats
         elif mode == 'loss':
             return self.loss(inputs, data_samples)
+        # added from: https://mmselfsup.readthedocs.io/en/1.x/advanced_guides/models.html
+        elif mode == 'predict':
+            self.predict = self.loss # temporary measure, can't find predict definition
+            return self.predict(inputs, data_samples)
         else:
             raise RuntimeError(f'Invalid mode "{mode}".')
 

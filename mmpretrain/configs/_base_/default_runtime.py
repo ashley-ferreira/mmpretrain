@@ -2,10 +2,10 @@
 # This is a BETA new format config file, and the usage may change recently.
 from mmengine.hooks import (CheckpointHook, DistSamplerSeedHook, IterTimerHook,
                             LoggerHook, ParamSchedulerHook)
-from mmengine.visualization import LocalVisBackend
+from mmengine.visualization import LocalVisBackend, WandbVisBackend
 
 from mmpretrain.engine.hooks import VisualizationHook
-from mmpretrain.visualization import UniversalVisualizer
+from mmpretrain.visualization import UniversalVisualizer #.tools leads to wrong place
 
 # configure default hooks
 default_hooks = dict(
@@ -41,7 +41,7 @@ env_cfg = dict(
 )
 
 # set visualizer
-vis_backends = [dict(type=LocalVisBackend)]
+vis_backends = [dict(type=LocalVisBackend), dict(type=WandbVisBackend)] # currently visualizing each batch
 visualizer = dict(type=UniversalVisualizer, vis_backends=vis_backends)
 
 # set log level

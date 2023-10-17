@@ -191,7 +191,8 @@ def simulate_train(data_loader, cfg, by_epoch):
         param_scheduler=cfg.param_scheduler,
         default_scope=cfg.default_scope,
         default_hooks=default_hooks,
-        visualizer=MagicMock(spec=Visualizer),
+        #visualizer=MagicMock(spec=Visualizer),
+        visualizer=dict(type='Visualizer', vis_backends=[dict(type='WandbVisBackend')]),
         custom_hooks=cfg.get('custom_hooks', None))
 
     runner.train()

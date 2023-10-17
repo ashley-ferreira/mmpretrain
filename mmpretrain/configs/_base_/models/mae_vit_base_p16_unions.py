@@ -3,8 +3,8 @@
 from mmpretrain.models import (MAE, MAEPretrainDecoder, MAEPretrainHead,
                                MAEViT, PixelReconstructionLoss)
 
-img_size = 144  # needs to match the crop size defined in the training pipeline
-patch_size = 16  # img_size needs to be divisible by patch_size
+img_size = 32 # needs to match the crop size defined in the training pipeline
+patch_size = 4  # img_size needs to be divisible by patch_size
 in_chans = 5
 num_patches_x = img_size / patch_size
 num_patches_y = img_size / patch_size
@@ -12,8 +12,8 @@ num_patches = int(num_patches_x * num_patches_y)
 
 # model settings
 model = dict(
-    type=MAE,
-    backbone=dict(type=MAEViT, arch='b', patch_size=patch_size, mask_ratio=0.75, in_channels=in_chans, img_size=img_size),
+    type=MAE, # we probably want a bit lower of a mask ratio in our case, with smaller patches
+    backbone=dict(type=MAEViT, arch='b', patch_size=patch_size, mask_ratio=0.5, in_channels=in_chans, img_size=img_size),
     neck=dict(
         type=MAEPretrainDecoder,
         patch_size=patch_size,

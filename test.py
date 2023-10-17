@@ -1,12 +1,8 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import argparse
 import os
-
 import os.path as osp
 from copy import deepcopy
-
-#import sys
-#sys.path.insert(0, '../')
 
 import mmengine
 from mmengine.config import Config, ConfigDict, DictAction
