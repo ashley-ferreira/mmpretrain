@@ -15,32 +15,31 @@ from torch.optim.adamw import AdamW
 
 from mmpretrain.datasets import MultiHDF5Dataset, PackInputs, RandomResizedCrop
 dataset_type = MultiHDF5Dataset 
+
 data_root = '/arc/projects/unions/ssl/data/processed/unions-cutouts/ugriz_lsb/10k_per_h5/valid2'
+data_root_val = '/arc/projects/unions/ssl/data/processed/unions-cutouts/ugriz_lsb/10k_per_h5/val'
+
 
 from mmcv.transforms import RandomFlip
 from mmpretrain.evaluation import Accuracy
 
 train_pipeline = [
-    dict(
-        type=RandomResizedCrop,
-        scale=32,
-        crop_ratio_range=(0.2, 1.0),
-        interpolation='bicubic'),
-    dict(type=RandomFlip, prob=0.5),
+    dict(type=CenterCrop, crop_size=32),
     dict(type=PackInputs) 
 ]
 
-pipeline = dict(batch_size=128, dataset=dict(type=dataset_type, # pipelines to be the same?
+train_dataloader = dict(batch_size=32*4, dataset=dict(type=dataset_type, 
         data_root=data_root,
         pipeline=train_pipeline))
-val_dataloader = dict(batch_size=128, dataset=dict(type=dataset_type,
-        data_root=data_root,
+
+val_dataloader = dict(batch_size=32*4, dataset=dict(type=dataset_type,
+        data_root=data_root_val,
         pipeline=train_pipeline))
+
 test_dataloader = val_dataloader
-train_dataloader = None
 
 test_cfg = dict(type='TestLoop') 
 val_cfg = dict(type='ValLoop')
 
-test_evaluator = dict(type=Accuracy) # need to change to loss
+test_evaluator = dict(type=PixelReconstructionLoss, criterion='L2')
 val_evaluator = test_evaluator

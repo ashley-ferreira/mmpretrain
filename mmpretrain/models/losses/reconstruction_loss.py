@@ -65,3 +65,25 @@ class PixelReconstructionLoss(BaseModule):
             loss = (loss * mask).sum() / mask.sum() / self.channel
 
         return loss
+
+    def process(self, data_batch, data_samples):
+        self.results.append(data_samples)
+        
+    def compute_metrics(self, results):
+        result_metrics = dict()
+        result_metrics['loss'] = results 
+        return result_metrics
+    
+    def evaluate(self, size):
+        """Evaluate the model performance of the whole dataset after processing
+        all batches.
+
+        Args:
+            size (int): Length of the entire validation dataset.
+        Returns:
+            dict: Evaluation metrics dict on the val dataset. 
+        """
+        #metrics = dict()
+        #metrics['loss'] = self.results['loss']
+        metrics = self.results
+        return metrics

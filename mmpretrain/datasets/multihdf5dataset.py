@@ -24,7 +24,7 @@ class MultiHDF5Dataset(BaseDataset):
         file_idx = idx // self.samples_per_file
         sample_idx = idx % self.samples_per_file
         with h5py.File(self.hdf5_files[file_idx], 'r') as f:
-            image = np.array(f['images'][sample_idx])
+            image = np.array(f['images'][sample_idx])+1
 
         image = image.transpose((1, 2, 0))  # Change order to (H, W, channel)
 

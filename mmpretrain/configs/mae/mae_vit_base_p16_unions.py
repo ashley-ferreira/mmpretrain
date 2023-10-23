@@ -32,6 +32,7 @@ optim_wrapper = dict(
         }))
 
 # learning rate scheduler
+'''
 param_scheduler = [ # base lr is increasing when I thought it should be decreasing, this may cause that
     dict(
         type=LinearLR,
@@ -48,6 +49,7 @@ param_scheduler = [ # base lr is increasing when I thought it should be decreasi
         end=400,
         convert_to_iter_based=True)
 ]
+'''
 
 # runtime settings
 train_cfg = dict(type=EpochBasedTrainLoop, max_epochs=100)
@@ -60,8 +62,11 @@ randomness.update(seed=0, diff_rank_seed=True)
 # auto resume
 resume = True
 
-work_dir = '/arc/projects/unions/ssl/results/training_runs/MAEViT_Oct16_8'
+work_dir = '/arc/projects/unions/ssl/results/training_runs/MAEViT_Oct22_3'
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR
 # based on the actual training batch size.
-auto_scale_lr = dict(base_batch_size=32)
+auto_scale_lr = dict(base_batch_size=32*4)
+
+val_cfg = dict(type='ValLoop') # in mmengine so a bit more complicated to touch
+val_evaluator = dict(type=PixelReconstructionLoss, criterion='L2')
